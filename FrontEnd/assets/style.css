@@ -186,3 +186,83 @@ footer nav ul {
 	margin: 2em
 }
 
+/* CSS Ajouté */
+a {
+    color: black;
+    text-decoration: none;
+}
+
+/* Rendre les liens nav en noir (avec hover) */
+
+a:visited {
+	color: black;
+}
+
+a:hover {
+	color: #B1663C;
+}
+
+.login-body {
+	background-color: #FFFEF8;
+}
+
+/* CSS Page Login */
+
+#connexion {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+}
+
+#connexion > * {
+	margin: 20px;
+	margin-top: 45px;
+}
+
+#connexion form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+	width: 25%;
+}
+
+#connexion form > * {
+	margin-top: 5px;
+}
+
+#connexion form label {
+	margin-top: 25px;
+}
+
+#connexion form input {
+	width: 100%;
+	padding: 15px;
+	border: none;
+	box-shadow: 0 0 14px rgba(0, 0, 0, 0.09);
+}
+
+#connexion button {
+	width: 15%;
+	padding: 10px;
+	border: none;
+	border-radius: 60px;
+	background-color: #1D6154; 
+    color: white; 
+	font-family: 'Work Sans';
+}
+
+#connexion a {
+	margin-top: 5px;
+	text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+	#connexion form {
+		width: 75%;
+	}
+
+	#connexion button {
+		width: 60%;
+	}
+}

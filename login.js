@@ -11,6 +11,7 @@ function sendLogin (email, password) {
     .then(response => {
       if (!response.ok) {
         showError()
+        throw new Error('Wrong login combination')
       }
       return response.json()
     })
@@ -18,9 +19,10 @@ function sendLogin (email, password) {
       const token = data.token
       localStorage.setItem('token', token)
       console.log(`Login réussi. token: '${token}'`)
+      window.location.href = 'index.html'
     })
     .catch(error => {
-      console.error('Error during login:', error)
+      console.error(error)
     })
 }
 const loginButton = document.getElementById('login-button')
@@ -32,5 +34,6 @@ loginButton.addEventListener('click', function () {
 })
 
 function showError () {
-  console.log('Erreur')
+  const errorSection = document.querySelector('.errorsection')
+  errorSection.innerText = 'Combinaison e-mail & mot de passe incorrecte.'
 }

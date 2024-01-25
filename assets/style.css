@@ -285,6 +285,11 @@ a:hover {
 	text-decoration: underline;
 }
 
+.errorsection {
+	color: red;
+	margin-top: 10px !important;
+}
+
 /* RESPONSIVENESS MOBILE  */
 
 @media (max-width: 768px) {

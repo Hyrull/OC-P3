@@ -84,3 +84,22 @@ async function setup () {
   displayGallery()
 }
 setup()
+
+const token = localStorage.getItem('token')
+if (token) {
+  // Remplacer "login" par un bouton "logout"
+  const loginButton = document.getElementById('loginbutton')
+  const logoutButton = document.createElement('button')
+  logoutButton.innerText = 'logout'
+  loginButton.innerHTML = ''
+
+  // Annuler l'ancien href (login.html) avant de rajouter le button
+  loginButton.setAttribute('href', 'javascript:void(0);')
+  loginButton.appendChild(logoutButton)
+
+  // Eventlistener du logout
+  logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('token')
+    window.location.href = 'index.html'
+  })
+}

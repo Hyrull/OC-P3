@@ -194,6 +194,20 @@ a {
 .activenav {
 	font-weight: bold;
 }
+
+nav button {
+	padding: 0 10px;
+	font-size: 1em;
+	border: none;
+	background-color: white;
+	cursor: pointer;
+	font: inherit;
+	margin-left: -10px;
+}
+
+nav button:hover {
+	color: #B1663C;
+}
 /* Rendre les liens nav en noir (avec hover) */
 
 a:visited {

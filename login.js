@@ -18,7 +18,6 @@ function sendLogin (email, password) {
     .then(data => {
       const token = data.token
       localStorage.setItem('token', token)
-      console.log(`Login réussi. token: '${token}'`)
       window.location.href = 'index.html'
     })
     .catch(error => {

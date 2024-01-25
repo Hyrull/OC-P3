@@ -13,7 +13,7 @@ async function fetchCategories () {
   categories = await categoriesAPI.json()
 }
 
-async function displayGallery (filter = projets) {
+function displayGallery (filter = projets) {
   const sectionGallery = document.querySelector('.gallery')
   sectionGallery.innerHTML = ''
 
@@ -33,7 +33,7 @@ async function displayGallery (filter = projets) {
   }
 }
 
-async function displayFilters () {
+function displayFilters () {
   // DOM - Préparation (filtres)
   const sectionPortfolio = document.querySelector('#portfolio')
   const filterDiv = document.createElement('div')

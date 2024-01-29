@@ -2,21 +2,33 @@
 
 let projets = ''
 let categories = ''
+let apiUrl = ''
 
+// stocker l'url de l'API depuis config.json
+async function fetchApiURL () {
+  const configResponse = await fetch('./config.json')
+  const config = await configResponse.json()
+  apiUrl = config.apiUrl
+}
+
+// établir la liste pour la gallery (variable "projets")
 async function fetchGallery () {
-  const worksAPI = await fetch('http://localhost:5678/api/works')
+  const worksAPI = await fetch(`${apiUrl}/works`)
   projets = await worksAPI.json()
 }
 
+// établir la liste des catégories dynamiquement (variables "categories")
 async function fetchCategories () {
-  const categoriesAPI = await fetch('http://localhost:5678/api/categories')
+  const categoriesAPI = await fetch(`${apiUrl}/categories`)
   categories = await categoriesAPI.json()
 }
 
+// affiche la gallery dans le DOM de l'index.
 function displayGallery (filter = projets) {
   const sectionGallery = document.querySelector('.gallery')
   sectionGallery.innerHTML = ''
 
+  // boucle display de chaque image
   for (let i = 0; i < filter.length; i++) {
     const projet = filter[i]
 
@@ -33,6 +45,7 @@ function displayGallery (filter = projets) {
   }
 }
 
+// Afficher les différents filtres
 function displayFilters () {
   // DOM - Préparation (filtres)
   const sectionPortfolio = document.querySelector('#portfolio')
@@ -44,14 +57,14 @@ function displayFilters () {
   tousButton.classList.add('activefilter')
   filterDiv.appendChild(tousButton)
 
-  // Autres filtres (dynamic)
+  // Autres filtres (dynamiquement) - appelle la fonction createFilterButton x fois
   for (let i = 0; i < categories.length; i++) {
     const category = categories[i]
     const filterButton = createFilterButton(category.name, category.id)
     filterDiv.appendChild(filterButton)
   }
 
-  // Créer un filtre
+  // Création du filtre
   function createFilterButton (name, categoryId) {
     const button = document.createElement('button')
     button.innerText = name
@@ -61,10 +74,10 @@ function displayFilters () {
       const buttons = filterDiv.querySelectorAll('button')
       buttons.forEach(btn => btn.classList.remove('activefilter'))
 
-      // Ajouter la classe au bouton en question
+      // Classe ajoutée pour changer la couleur du filtre actif (css)
       button.classList.add('activefilter')
 
-      // Comparaison de l'id filtre & id catégorie pour l'image (sauf si "tous")
+      // Filtre la liste des projets en comparant l'ID de chaque projet à l'ID de la catégorie choisie (sauf si name === tous)
       const filteredProjects = (name === 'Tous')
         ? projets
         : projets.filter(projet => projet.categoryId === categoryId)
@@ -72,34 +85,17 @@ function displayFilters () {
     })
     return button
   }
-  // DOM - Affichage (filtres)
+  // DOM - Affichage de la liste de tous les filtres
   const sectionGallery = document.querySelector('.gallery')
   sectionPortfolio.insertBefore(filterDiv, sectionGallery)
 }
 
 async function setup () {
+  await fetchApiURL()
   await fetchGallery()
   await fetchCategories()
   displayFilters()
   displayGallery()
 }
+
 setup()
-
-const token = localStorage.getItem('token')
-if (token) {
-  // Remplacer "login" par un bouton "logout"
-  const loginButton = document.getElementById('loginbutton')
-  const logoutButton = document.createElement('button')
-  logoutButton.innerText = 'logout'
-  loginButton.innerHTML = ''
-
-  // Annuler l'ancien href (login.html) avant de rajouter le button
-  loginButton.setAttribute('href', 'javascript:void(0);')
-  loginButton.appendChild(logoutButton)
-
-  // Eventlistener du logout
-  logoutButton.addEventListener('click', () => {
-    localStorage.removeItem('token')
-    window.location.href = 'index.html'
-  })
-}

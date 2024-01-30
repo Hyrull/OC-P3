@@ -258,7 +258,6 @@ nav button:hover {
 /* Fenêtre modale  */
 
 .overlay {
-	opacity: 0;
 	position: absolute;
 	width: 100%;
 	height: 100%;

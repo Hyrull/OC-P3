@@ -212,29 +212,28 @@ nav button:hover {
 	color: #B1663C;
 }
 
+
+.edit-banner {
+	margin: 0px;
+	width: 100%;
+	padding: 10px 0px;;
+	background-color: black;
+	color: white;
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+}
+
+.edit-banner p {
+	margin: 10px;
+}
+
 .edit-banner {
 	display: none;
 }
 
 .edit-banner.active {
-	display: block;
-}
-
-.edit-banner {
-	margin: 0px;
-	width: 100%;
-	padding: 10px;
-	background-color: black;
-	color: white;
-	cursor: pointer;
 	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-
-.edit-banner p {
-	margin: 10px;
 }
 
 .projets-titres {
@@ -264,6 +263,43 @@ nav button:hover {
 	background: #333333d3;
 }
 
+.galerie-preview {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 10px;
+	margin: 20px 30px;
+	border-bottom: 1px solid #B3B3B3;
+	padding-bottom: 20px;
+}
+
+.galerie-preview figure {
+	position: relative;
+	margin: 10px 0px;
+	width: 100%;
+}
+
+.galerie-preview img {
+	width: 100%;
+}
+
+#add-photo, #send-photo {
+	background-color: #1D6154;
+	color: white;
+	border: none;
+	border-radius: 60px;
+	width: 50%;
+	font-size: 14px;
+	font-family: 'Syne';
+	font-weight: 700;
+	padding: 10px;
+	margin: 10px auto;
+	cursor: pointer;
+}
+
+#send-photo:disabled {
+	background: #A7A7A7;
+	cursor: auto;
+} 
 
 
 .modal-container {
@@ -279,22 +315,94 @@ nav button:hover {
 }
 
 
-.modal {
+.modalpreview {
+	display: none;
+	flex-direction: column;
 	width: 95%;
 	max-width: 500px;
 	min-width: 300px;
-	padding: 30px;
+	padding: 40px 60px;
 	background: white;
 	border-radius: 10px;
 	position: absolute;
-	top: 40%;
+	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
 
-.modal h2 {
-	margin-bottom: 15px;
+.modaladdphoto {
+	display: none;
+	flex-direction: column;
+	justify-content: center;
+	width: 95%;
+	max-width: 500px;
+	min-width: 300px;
+	padding: 40px 60px;
+	background: white;
+	border-radius: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
+
+.formaddphoto {
+	display: flex;
+	flex-direction: column;
+	justify-content: auto;
+}
+
+.formaddphoto h3 {
+	margin: 5px 50px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #3D3D3D; 
+}
+
+.formaddphoto input, .formaddphoto select {
+	width: 75%;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	padding: 15px;
+	margin: 10px auto;
+}
+
+.formaddphoto select {
+	width: 81%;
+	background-color: white;
+}
+
+.modalpreview h2, .modaladdphoto h2 {
+	text-align: center;
+	color: black;
+	margin: 25px;
+	font-weight: 500;
+	font-family: 'Work Sans';
+	font-size: 26px;
+}
+
+.modalpreview.active {
+	display: flex;
+}
+
+.modaladdphoto.active {
+	display: flex;
+}
+
+.delete-button {
+	position: absolute;
+	top: 10px; /* Adjust the top position as needed */
+	right: 10px; /* Adjust the right position as needed */
+	background-color: black;
+	color: white;
+	border: none;
+	padding: 4px;
+	cursor: pointer;
+}
+
+.delete-button i {
+	font-size: 12px; /* Adjust the font-size to make the icon smaller */
+  }
 
 .close-button {
 	padding: 8px 10px;

@@ -18,6 +18,7 @@ function modeEditionDisplay () {
   if (token) {
     // Bannière "Mode édition". Icône : FontAwesome
     const headerSlot = document.querySelector('.edit-banner')
+    headerSlot.classList.toggle('active')
     const editionIcon = document.createElement('i')
     editionIcon.classList.add('fa-regular', 'fa-pen-to-square')
     const editionText = document.createElement('p')

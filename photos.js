@@ -1,3 +1,4 @@
+/* eslint-disable semi */
 // local storage pour les photos ?
 
 let projets = ''
@@ -90,12 +91,84 @@ function displayFilters () {
   sectionPortfolio.insertBefore(filterDiv, sectionGallery)
 }
 
+// Modale - gallery preview
+// affiche la gallery dans le DOM de l'index.
+function displayPreviewGallery () {
+  const sectionGallery = document.querySelector('.galerie-preview')
+
+  // boucle display de chaque image
+  for (let i = 0; i < projets.length; i++) {
+    const projet = projets[i]
+
+    // DOM - Préparation
+    const projetFigure = document.createElement('figure')
+    const projetImg = document.createElement('img')
+    projetImg.src = projet.imageUrl
+    const deleteButton = document.createElement('button')
+    const deleteIcon = document.createElement('i')
+
+    // Setup du bouton delete
+    deleteButton.classList.add('delete-button')
+    deleteButton.addEventListener('click', () => deletePicture()) // <-- ADDPICTUREID
+    deleteIcon.classList.add('fa-solid', 'fa-trash-can')
+    deleteButton.appendChild(deleteIcon)
+
+    // DOM - Affichage
+    sectionGallery.appendChild(projetFigure)
+    projetFigure.appendChild(projetImg)
+    projetFigure.appendChild(deleteButton)
+  }
+}
+
+// Modale - Bouton delete
+
+// Modale - bouton add photo (switch de page)
+function modalSwitchSetup () {
+  const addPhotoButton = document.getElementById('add-photo')
+  addPhotoButton.addEventListener('click', function () {
+    document.querySelector('.modalpreview').classList.remove('active')
+    document.querySelector('.modaladdphoto').classList.add('active')
+  })
+  const closeButtons = document.querySelectorAll('.modal-trigger')
+  closeButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      document.querySelector('.modalpreview').classList.add('active')
+      document.querySelector('.modaladdphoto').classList.remove('active')
+    })
+  })
+}
+
+// Modale - Bouton send photo
+function uploadPhotoSetup () {
+  const fileInput = document.querySelector('input[type="file"]')
+  const titleInput = document.getElementById('photo-title')
+  const categoryInput = document.getElementById('categorie-form-id')
+  const uploadPhotoButton = document.getElementById('send-photo')
+
+  // Enlever "disabled" du bouton automatiquement
+  fileInput.addEventListener('change', validateInputs);
+  titleInput.addEventListener('input', validateInputs);
+  categoryInput.addEventListener('change', validateInputs);
+
+  // Function to validate inputs and enable/disable the button
+  function validateInputs () {
+  // Check if all required inputs have valid values
+    const isFileValid = fileInput.files.length > 0;
+    const isTitleValid = titleInput.value.trim() !== '';
+    uploadPhotoButton.disabled = !(isFileValid && isTitleValid);
+  }
+}
+
+// Setup
 async function setup () {
   await fetchApiURL()
   await fetchGallery()
   await fetchCategories()
   displayFilters()
   displayGallery()
+  displayPreviewGallery()
+  modalSwitchSetup()
+  uploadPhotoSetup()
 }
 
 setup()

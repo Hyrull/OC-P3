@@ -1,4 +1,3 @@
-/* eslint-disable semi */
 // local storage pour les photos ?
 
 let projets = ''
@@ -109,8 +108,8 @@ function displayPreviewGallery () {
 
     // Setup du bouton delete
     deleteButton.classList.add('delete-button')
-    deleteButton.addEventListener('click', () => deletePicture()) // <-- ADDPICTUREID
     deleteIcon.classList.add('fa-solid', 'fa-trash-can')
+    deleteButton.addEventListener('click', () => deletePicture()) // <-- ADDPICTUREID
     deleteButton.appendChild(deleteIcon)
 
     // DOM - Affichage
@@ -151,50 +150,61 @@ function uploadPhotoSetup () {
   const uploadPhotoButton = document.getElementById('send-photo')
 
   // Enlever "disabled" du bouton automatiquement
-  fileInput.addEventListener('change', validateInputs);
-  titleInput.addEventListener('input', validateInputs);
-  categoryInput.addEventListener('change', validateInputs);
+  fileInput.addEventListener('change', validateInputs)
+  titleInput.addEventListener('input', validateInputs)
+  categoryInput.addEventListener('change', validateInputs)
 
   function validateInputs () {
   // Check si l'image fait moins de 4mo et si le titre est pas vide
-    const isFileValid = fileInput.files.length > 0 && isFileLessThan4mo(fileInput.files[0]);
-    const isTitleValid = titleInput.value.trim() !== '';
-    uploadPhotoButton.disabled = !(isFileValid && isTitleValid);
+    const isFileValid = fileInput.files.length > 0 && isFileLessThan4mo(fileInput.files[0])
+    const isTitleValid = titleInput.value.trim() !== ''
+    uploadPhotoButton.disabled = !(isFileValid && isTitleValid)
   }
   function isFileLessThan4mo (file) {
-    const maxSize = 4 * 1024 * 1024;
-    return file.size <= maxSize;
+    const maxSize = 4 * 1024 * 1024
+    return file.size <= maxSize
   }
 }
 
+function updateCategorySelect () {
+  const categorySelect = document.getElementById('categorie-form-id')
+  categorySelect.innerHTML = ''
+  categories.forEach(category => {
+    const option = document.createElement('option')
+    option.value = category.id
+    option.textContent = category.name
+    categorySelect.appendChild(option)
+  })
+}
+
 function uploadPhotoPreviewSetup () {
-  document.getElementById('file-input').addEventListener('change', handleFileSelect);
+  document.getElementById('file-input').addEventListener('change', handleFileSelect)
   function handleFileSelect (event) {
-    const fileInput = event.target;
-    const fileBox = document.querySelector('.file-box');
+    const fileInput = event.target
+    const fileBox = document.querySelector('.file-box')
 
     // S'il y a un fichier...
     if (fileInput.files.length > 0) {
-      const selectedFile = fileInput.files[0];
+      const selectedFile = fileInput.files[0]
 
       // Stocker l'image dans filereader
-      const reader = new FileReader();
+      const reader = new FileReader()
 
       reader.onload = function (e) {
         // Créer l'image et mettre que sa source = l'url
-        const imagePreview = document.createElement('img');
-        imagePreview.src = e.target.result;
+        const imagePreview = document.createElement('img')
+        imagePreview.src = e.target.result
 
         // Rempalcer la preview si besoin
-        fileBox.innerHTML = '';
-        fileBox.appendChild(imagePreview);
-      };
+        fileBox.innerHTML = ''
+        fileBox.appendChild(imagePreview)
+      }
 
       // Lire le fichier
-      reader.readAsDataURL(selectedFile);
+      reader.readAsDataURL(selectedFile)
     } else {
       // Pas d'image = clear
-      fileBox.innerHTML = '';
+      fileBox.innerHTML = ''
     }
   }
 }
@@ -210,6 +220,7 @@ async function setup () {
   modalSwitchSetup()
   uploadPhotoSetup()
   uploadPhotoPreviewSetup()
+  updateCategorySelect()
 }
 
 setup()

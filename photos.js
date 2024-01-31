@@ -122,7 +122,7 @@ function displayPreviewGallery () {
 
 // Modale - Bouton delete
 
-// Modale - bouton add photo (switch de page)
+// Modale - bouton add photo (switch de page) & previous page
 function modalSwitchSetup () {
   const addPhotoButton = document.getElementById('add-photo')
   addPhotoButton.addEventListener('click', function () {
@@ -136,11 +136,16 @@ function modalSwitchSetup () {
       document.querySelector('.modaladdphoto').classList.remove('active')
     })
   })
+  const previousButton = document.querySelector('.previous-button')
+  previousButton.addEventListener('click', function () {
+    document.querySelector('.modalpreview').classList.add('active')
+    document.querySelector('.modaladdphoto').classList.remove('active')
+  })
 }
 
 // Modale - Bouton send photo
 function uploadPhotoSetup () {
-  const fileInput = document.querySelector('input[type="file"]')
+  const fileInput = document.getElementById('file-input')
   const titleInput = document.getElementById('photo-title')
   const categoryInput = document.getElementById('categorie-form-id')
   const uploadPhotoButton = document.getElementById('send-photo')
@@ -150,12 +155,47 @@ function uploadPhotoSetup () {
   titleInput.addEventListener('input', validateInputs);
   categoryInput.addEventListener('change', validateInputs);
 
-  // Function to validate inputs and enable/disable the button
   function validateInputs () {
-  // Check if all required inputs have valid values
-    const isFileValid = fileInput.files.length > 0;
+  // Check si l'image fait moins de 4mo et si le titre est pas vide
+    const isFileValid = fileInput.files.length > 0 && isFileLessThan4mo(fileInput.files[0]);
     const isTitleValid = titleInput.value.trim() !== '';
     uploadPhotoButton.disabled = !(isFileValid && isTitleValid);
+  }
+  function isFileLessThan4mo (file) {
+    const maxSize = 4 * 1024 * 1024;
+    return file.size <= maxSize;
+  }
+}
+
+function uploadPhotoPreviewSetup () {
+  document.getElementById('file-input').addEventListener('change', handleFileSelect);
+  function handleFileSelect (event) {
+    const fileInput = event.target;
+    const fileBox = document.querySelector('.file-box');
+
+    // S'il y a un fichier...
+    if (fileInput.files.length > 0) {
+      const selectedFile = fileInput.files[0];
+
+      // Stocker l'image dans filereader
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        // Créer l'image et mettre que sa source = l'url
+        const imagePreview = document.createElement('img');
+        imagePreview.src = e.target.result;
+
+        // Rempalcer la preview si besoin
+        fileBox.innerHTML = '';
+        fileBox.appendChild(imagePreview);
+      };
+
+      // Lire le fichier
+      reader.readAsDataURL(selectedFile);
+    } else {
+      // Pas d'image = clear
+      fileBox.innerHTML = '';
+    }
   }
 }
 
@@ -169,6 +209,7 @@ async function setup () {
   displayPreviewGallery()
   modalSwitchSetup()
   uploadPhotoSetup()
+  uploadPhotoPreviewSetup()
 }
 
 setup()

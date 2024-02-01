@@ -25,9 +25,10 @@ async function fetchCategories () {
 }
 
 // affiche la gallery dans le DOM de l'index.
-async function displayGallery (filter = projets) {
+function displayGallery (filter = projets) {
   const sectionGallery = document.querySelector('.gallery')
   sectionGallery.innerHTML = ''
+  console.log('Displaying!')
 
   // boucle display de chaque image
   for (let i = 0; i < filter.length; i++) {
@@ -103,8 +104,7 @@ function updateCategorySelect () {
 }
 
 // Modale - gallery preview
-// affiche la gallery dans le DOM de l'index.
-async function displayPreviewGallery () {
+function displayPreviewGallery () {
   const sectionGallery = document.querySelector('.galerie-preview')
   sectionGallery.innerHTML = ''
 
@@ -173,8 +173,13 @@ function uploadPhotoSetup () {
     formData.append('title', titleInput.value)
     formData.append('category', parseInt(categoryInput.value))
 
-    // Envoyer la requêtes
+    // Envoyer la requête
     sendPhotoRequest(apiUrl, formData, token)
+
+    // Clear
+    console.log('clearing')
+    clearFilePreview(fileInput)
+    titleInput.innerText = ''
   })
 
   function validateInputs () {
@@ -221,6 +226,13 @@ function uploadPhotoPreviewSetup () {
   }
 }
 
+// Clear la preview de l'image dans l'upload
+function clearFilePreview (fileInput) {
+  fileInput.value = ''
+  const fileBox = document.querySelector('.file-box')
+  fileBox.innerHTML = '<label for="file-input" class="file-content"><i class="fa-regular fa-image"></i><button>+ Ajouter photo</button><p>jpg, png : 4mo max </p></label>'
+}
+
 // Setup
 async function setup () {
   await fetchApiURL()
@@ -236,4 +248,4 @@ async function setup () {
 }
 
 setup()
-export { displayGallery, displayPreviewGallery }
+export { displayGallery, displayPreviewGallery, fetchGallery }

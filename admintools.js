@@ -1,4 +1,4 @@
-import { displayGallery, displayPreviewGallery } from './photos.js'
+import { displayGallery, displayPreviewGallery, fetchGallery } from './photos.js'
 const token = localStorage.getItem('token')
 
 function switchLoginToLogout () {
@@ -60,6 +60,9 @@ async function sendPhotoRequest (apiUrl, formData, token) {
   })
 
   if (response.ok) {
+    toggleModal()
+    await fetchGallery()
+    displayPreviewGallery()
     displayGallery()
     return { success: true, message: 'Photo ajoutée !' }
   }
@@ -79,8 +82,9 @@ async function deletePicture (apiUrl, pictureId, token) {
   })
 
   if (response.ok) {
-    await displayPreviewGallery()
-    await displayGallery()
+    await fetchGallery()
+    displayPreviewGallery()
+    displayGallery()
   }
 
   console.error('Error:', response.status, response.statusText)

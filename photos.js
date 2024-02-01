@@ -91,6 +91,17 @@ function displayFilters () {
   sectionPortfolio.insertBefore(filterDiv, sectionGallery)
 }
 
+function updateCategorySelect () {
+  const categorySelect = document.getElementById('categorie-form-id')
+  categorySelect.innerHTML = ''
+  categories.forEach(category => {
+    const option = document.createElement('option')
+    option.value = category.id
+    option.textContent = category.name
+    categorySelect.appendChild(option)
+  })
+}
+
 // Modale - gallery preview
 // affiche la gallery dans le DOM de l'index.
 async function displayPreviewGallery () {
@@ -176,17 +187,6 @@ function uploadPhotoSetup () {
     const maxSize = 4 * 1024 * 1024
     return file.size <= maxSize
   }
-}
-
-function updateCategorySelect () {
-  const categorySelect = document.getElementById('categorie-form-id')
-  categorySelect.innerHTML = ''
-  categories.forEach(category => {
-    const option = document.createElement('option')
-    option.value = category.id
-    option.textContent = category.name
-    categorySelect.appendChild(option)
-  })
 }
 
 function uploadPhotoPreviewSetup () {

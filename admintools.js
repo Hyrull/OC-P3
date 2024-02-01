@@ -1,3 +1,4 @@
+import { displayGallery, displayPreviewGallery } from './photos.js'
 const token = localStorage.getItem('token')
 
 function switchLoginToLogout () {
@@ -37,12 +38,7 @@ function modeEditionDisplay () {
   }
 }
 
-if (token) {
-  switchLoginToLogout()
-  modeEditionDisplay()
-}
-
-// Modale
+// Modale toggle
 const modalContainer = document.querySelector('.modal-container')
 const modalTrigger = document.querySelectorAll('.modal-trigger')
 
@@ -52,4 +48,47 @@ function toggleModal () {
   modalContainer.classList.toggle('active')
 }
 
+// Add picture
+async function sendPhotoRequest (apiUrl, formData, token) {
+  const response = await fetch(`${apiUrl}/works`, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  })
+
+  if (response.ok) {
+    displayGallery()
+    return { success: true, message: 'Photo ajoutée !' }
+  }
+
+  console.error('Error:', response.status, response.statusText)
+  return { success: false, message: "Erreur de l'envoi" }
+}
+
 // Delete picture
+async function deletePicture (apiUrl, pictureId, token) {
+  const response = await fetch(`${apiUrl}/works/${pictureId}`, {
+    method: 'DELETE',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  if (response.ok) {
+    await displayPreviewGallery()
+    await displayGallery()
+  }
+
+  console.error('Error:', response.status, response.statusText)
+  return { success: false, message: 'Erreur de la suppression' }
+}
+
+if (token) {
+  switchLoginToLogout()
+  modeEditionDisplay()
+}
+export { sendPhotoRequest, deletePicture }

@@ -1,8 +1,9 @@
 // local storage pour les photos ?
-
+import { sendPhotoRequest, deletePicture } from './admintools.js'
 let projets = ''
 let categories = ''
 let apiUrl = ''
+const token = localStorage.getItem('token')
 
 // stocker l'url de l'API depuis config.json
 async function fetchApiURL () {
@@ -24,7 +25,7 @@ async function fetchCategories () {
 }
 
 // affiche la gallery dans le DOM de l'index.
-function displayGallery (filter = projets) {
+async function displayGallery (filter = projets) {
   const sectionGallery = document.querySelector('.gallery')
   sectionGallery.innerHTML = ''
 
@@ -92,8 +93,9 @@ function displayFilters () {
 
 // Modale - gallery preview
 // affiche la gallery dans le DOM de l'index.
-function displayPreviewGallery () {
+async function displayPreviewGallery () {
   const sectionGallery = document.querySelector('.galerie-preview')
+  sectionGallery.innerHTML = ''
 
   // boucle display de chaque image
   for (let i = 0; i < projets.length; i++) {
@@ -109,7 +111,7 @@ function displayPreviewGallery () {
     // Setup du bouton delete
     deleteButton.classList.add('delete-button')
     deleteIcon.classList.add('fa-solid', 'fa-trash-can')
-    deleteButton.addEventListener('click', () => deletePicture()) // <-- ADDPICTUREID
+    deleteButton.addEventListener('click', () => deletePicture(apiUrl, projet.id, token))
     deleteButton.appendChild(deleteIcon)
 
     // DOM - Affichage
@@ -118,8 +120,6 @@ function displayPreviewGallery () {
     projetFigure.appendChild(deleteButton)
   }
 }
-
-// Modale - Bouton delete
 
 // Modale - bouton add photo (switch de page) & previous page
 function modalSwitchSetup () {
@@ -153,6 +153,18 @@ function uploadPhotoSetup () {
   fileInput.addEventListener('change', validateInputs)
   titleInput.addEventListener('input', validateInputs)
   categoryInput.addEventListener('change', validateInputs)
+
+  uploadPhotoButton.addEventListener('click', (event) => {
+    // Setup de la data
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('image', fileInput.files[0])
+    formData.append('title', titleInput.value)
+    formData.append('category', parseInt(categoryInput.value))
+
+    // Envoyer la requêtes
+    sendPhotoRequest(apiUrl, formData, token)
+  })
 
   function validateInputs () {
   // Check si l'image fait moins de 4mo et si le titre est pas vide
@@ -224,3 +236,4 @@ async function setup () {
 }
 
 setup()
+export { displayGallery, displayPreviewGallery }

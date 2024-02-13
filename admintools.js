@@ -39,17 +39,19 @@ function modeEditionDisplay () {
 }
 
 // Modale toggle
-const modalContainer = document.querySelector('.modal-container')
-const modalTrigger = document.querySelectorAll('.modal-trigger')
+const modalContainer = document.querySelector('.modal-container');
+const modalTrigger = document.querySelectorAll('.modal-trigger');
 
-modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal))
+modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal));
 
-function toggleModal () {
-  modalContainer.classList.toggle('active')
+function toggleModal(event) {
+  event.preventDefault()
+  modalContainer.classList.toggle('active');
 }
 
 // Add picture
 async function sendPhotoRequest (apiUrl, formData, token) {
+  console.log('sendPhotoRequest OK')
   const response = await fetch(`${apiUrl}/works`, {
     method: 'POST',
     headers: {
@@ -60,10 +62,12 @@ async function sendPhotoRequest (apiUrl, formData, token) {
   })
 
   if (response.ok) {
-    toggleModal()
-    await fetchGallery()
-    displayPreviewGallery()
-    displayGallery()
+    Promise.all([
+      toggleModal(),
+      fetchGallery(),
+      displayPreviewGallery(),
+      displayGallery(),
+    ])
     return { success: true, message: 'Photo ajoutée !' }
   }
 

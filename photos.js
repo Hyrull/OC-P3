@@ -1,4 +1,3 @@
-// local storage pour les photos ?
 import { sendPhotoRequest, deletePicture } from './admintools.js'
 let projets = ''
 let categories = ''
@@ -122,7 +121,11 @@ function displayPreviewGallery () {
     // Setup du bouton delete
     deleteButton.classList.add('delete-button')
     deleteIcon.classList.add('fa-solid', 'fa-trash-can')
-    deleteButton.addEventListener('click', () => deletePicture(apiUrl, projet.id, token))
+    deleteButton.type = 'button'
+    deleteButton.addEventListener('click', (event) => {
+      event.preventDefault()
+      deletePicture(apiUrl, projet.id, token)
+    })
     deleteButton.appendChild(deleteIcon)
 
     // DOM - Affichage
@@ -153,46 +156,62 @@ function modalSwitchSetup () {
   })
 }
 
-// Modale - Bouton send photo
-function uploadPhotoSetup () {
-  const fileInput = document.getElementById('file-input')
-  const titleInput = document.getElementById('photo-title')
-  const categoryInput = document.getElementById('categorie-form-id')
-  const uploadPhotoButton = document.getElementById('send-photo')
+function uploadPhotoSetup() {
+  const form = document.getElementById('upload-form');
+  const fileInput = document.getElementById('file-input');
+  const titleInput = document.getElementById('photo-title');
+  const categoryInput = document.getElementById('categorie-form-id');
+  const uploadPhotoButton = document.getElementById('send-photo');
 
   // Enlever "disabled" du bouton automatiquement
-  fileInput.addEventListener('change', validateInputs)
-  titleInput.addEventListener('input', validateInputs)
-  categoryInput.addEventListener('change', validateInputs)
+  fileInput.addEventListener('change', validateInputs);
+  titleInput.addEventListener('input', validateInputs);
+  categoryInput.addEventListener('change', validateInputs);
 
-  uploadPhotoButton.addEventListener('click', (event) => {
-    // Setup de la data
-    event.preventDefault()
-    const formData = new FormData()
-    formData.append('image', fileInput.files[0])
-    formData.append('title', titleInput.value)
-    formData.append('category', parseInt(categoryInput.value))
+  form.addEventListener('submit', async (event) => {
+    // Prevent the default form submission
+    event.preventDefault();
 
-    // Envoyer la requête
-    sendPhotoRequest(apiUrl, formData, token)
+    // Check if inputs are valid
+    if (form.checkValidity()) {
+      // Setup de la data
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+      formData.append('title', titleInput.value);
+      formData.append('category', parseInt(categoryInput.value));
 
-    // Clear
-    console.log('clearing')
-    clearFilePreview(fileInput)
-    titleInput.innerText = ''
-  })
+      // Envoyer la requête
+      try {
+        console.log('Calling sendPhotoRequest');
+        await sendPhotoRequest(apiUrl, formData, token);
 
-  function validateInputs () {
-  // Check si l'image fait moins de 4mo et si le titre est pas vide
-    const isFileValid = fileInput.files.length > 0 && isFileLessThan4mo(fileInput.files[0])
-    const isTitleValid = titleInput.value.trim() !== ''
-    uploadPhotoButton.disabled = !(isFileValid && isTitleValid)
+        // Clear
+        console.log('clearing');
+        clearFilePreview(fileInput);
+        titleInput.value = '';
+      } catch (error) {
+        console.error('Error sending photo request:', error);
+      }
+    }
+  });
+
+  function validateInputs() {
+    // Check si l'image fait moins de 4mo et si le titre est pas vide
+    const isFileValid = fileInput.files.length > 0 && isFileLessThan4mo(fileInput.files[0]);
+    const isTitleValid = titleInput.value.trim() !== '';
+    form.reportValidity(); // This will trigger the browser's validation UI
+    uploadPhotoButton.disabled = !(isFileValid && isTitleValid);
   }
-  function isFileLessThan4mo (file) {
-    const maxSize = 4 * 1024 * 1024
-    return file.size <= maxSize
+
+  function isFileLessThan4mo(file) {
+    const maxSize = 4 * 1024 * 1024;
+    return file.size <= maxSize;
   }
 }
+
+
+
+
 
 function uploadPhotoPreviewSetup () {
   document.getElementById('file-input').addEventListener('change', handleFileSelect)
